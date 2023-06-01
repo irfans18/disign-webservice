@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\Controller;
-use App\Models\User;
 use Validator;
+use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\API\DeviceController;
 
 class UserController extends Controller
 {
@@ -14,10 +15,13 @@ class UserController extends Controller
    {
       // Validate the request data
       $validator = Validator::make($request->all(), [
+         'username' => 'required|string|min:4|max:20|unique:users',
          'name' => 'required|string|max:255',
          'email' => 'required|string|email|max:255|unique:users',
          'password' => 'required|string|min:6',
          'pin' => 'required|digits:6',
+         'hwid' => 'required|string',
+         'device_name' => 'required|string',
       ]);
 
       if ($validator->fails()) {
@@ -26,11 +30,15 @@ class UserController extends Controller
 
       // Create the user
       $user = User::create([
+         'username' => $request->username,
          'name' => $request->name,
          'email' => $request->email,
          'password' => bcrypt($request->password),
          'pin' => bcrypt($request->password),
       ]);
+
+      $deviceController = app(DeviceController::class);
+      $device = $deviceController->store($user->id, $request->hwid, $request->device_name);
 
       // Generate a new API token for the user
       $token = $user->createToken('API Token')->plainTextToken;
@@ -45,7 +53,8 @@ class UserController extends Controller
    {
       // Validate the request data
       $validator = Validator::make($request->all(), [
-         'email' => 'required|string|email|max:255',
+         // 'email' => 'required|string|email|max:255',
+         'username' => 'required|string|max:20',
          'password' => 'required|string|min:6',
       ]);
 
@@ -54,7 +63,7 @@ class UserController extends Controller
       }
 
       // Attempt to authenticate the user
-      if (!Auth::attempt($request->only('email', 'password'))) {
+      if (!Auth::attempt($request->only('username', 'password'))) {
          return response()->json(['message' => 'Invalid credentials'], 401);
       }
 
