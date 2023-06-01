@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('certificate_srl');
             $table->boolean('is_revoked')->default(false);
             $table->string('revoked_at')->nullable();
+            $table->string('revoked_timestamp')->nullable();
             $table->string('revokation_detail')->nullable();
             $table->string('valid_start');
             $table->string('valid_end');

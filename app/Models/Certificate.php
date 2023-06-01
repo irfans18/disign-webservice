@@ -21,6 +21,7 @@ class Certificate extends Model
       'certificate_srl',
       'is_revoked',
       'revoked_at',
+      'revoked_timestamp',
       'revokation_detail',
       'valid_start',
       'valid_end',
