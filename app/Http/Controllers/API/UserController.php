@@ -15,7 +15,7 @@ class UserController extends Controller
 
    public function userInfo()
    {
-      return response()->json(['user' => Auth::user()]);
+      return response()->json(Auth::user());
    }
 
    public function pinAuth(Request $request)
