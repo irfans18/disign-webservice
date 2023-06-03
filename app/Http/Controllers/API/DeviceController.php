@@ -28,7 +28,10 @@ class DeviceController extends Controller
       $device = Device::where('hwid', $hwid)->first();
       if ($device == NULL) {
          // return response()->json(['message' => 'You need to register your device first!'], 401);
-         return 'You need to register this device first!';
+         return [
+            'message' => 'You need to register this device first!',
+            'last_active' => null,
+         ];
       }
       $device->last_active = time();
       return [
