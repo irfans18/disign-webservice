@@ -13,6 +13,11 @@ use App\Http\Controllers\API\DeviceController;
 class UserController extends Controller
 {
 
+   public function userInfo()
+   {
+      return response()->json(['user' => Auth::user()]);
+   }
+
    public function pinAuth(Request $request)
    {
       // Validate the request data
