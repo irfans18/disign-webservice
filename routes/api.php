@@ -32,12 +32,12 @@ Route::get('test/', function () {
 Route::post('/register', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login']);
 Route::post('/csr', [CertificateSigningRequestController::class, 'signCsr']);
-Route::post('/revoke', [CertificateRevokationController::class, 'revoke']);
+// Route::post('/revoke', [CertificateRevokationController::class, 'revoke']);
 
 Route::middleware('auth:sanctum')->group(function () {
    Route::get('/devices', [DeviceController::class, 'showUserDevices']);
    Route::post('/device', [DeviceController::class, 'register']);
-   Route::post('/check-device', [DeviceController::class, 'checkDevice']);
+   // Route::post('/check-device', [DeviceController::class, 'checkDevice']);
 
    Route::post('/isvalid', [CertificateRevokationController::class, 'checkLicenceValidation']);
    Route::post('/revoke', [CertificateRevokationController::class, 'requestRevocation']);

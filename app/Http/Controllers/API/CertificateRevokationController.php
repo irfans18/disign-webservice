@@ -25,9 +25,15 @@ class CertificateRevokationController extends Controller
       if ($validator->fails()) {
          return response()->json(['message' => $validator->errors()], 422);
       }
+      $user_id = Auth::user()->id;
 
       // $device = Device::select('*')->where('hwid', $request->hwid)->first()->toArray();
       $device = Device::where('hwid', $request->hwid)->first();
+      if ($user_id != $device->user_id) {
+         return response()->json([
+            'message' => 'Revokation Failed. Device not found!'
+         ], 422);
+      }
       $cert = Certificate::where('device_id', $device->id)->first();
 
       return $this->revoke($cert->certificate_srl, $request->revokation_detail);
@@ -44,6 +50,12 @@ class CertificateRevokationController extends Controller
          ], 422);
       }
 
+      if ($cert->is_revoked) {
+         return response()->json([
+            'message' => 'Certificate already revoked'
+         ], 422);
+      }
+
       $cert->is_revoked = true;
       $cert->revoked_at = time();
       $cert->revoked_timestamp = time();
@@ -53,7 +65,7 @@ class CertificateRevokationController extends Controller
       return response()->json([
          'message' => 'Revokation Success!',
          'certificate' => $cert,
-      ], 201);
+      ], 202);
    }
 
    public function checkLicenceValidation(Request $request)
