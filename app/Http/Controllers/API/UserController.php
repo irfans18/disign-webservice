@@ -7,10 +7,36 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\API\DeviceController;
 
 class UserController extends Controller
 {
+
+   public function pinAuth(Request $request)
+   {
+      // Validate the request data
+      $validator = Validator::make($request->all(), [
+         'pin' => 'required|digits:6',
+      ]);
+
+      if ($validator->fails()) {
+         return response()->json(['message' => $validator->errors()], 422);
+      }
+
+      // $pin = Hash::check($request->pin, Auth::user()->pin);
+      $pin = md5($request->pin);
+
+      // Attempt to authenticate the user
+      if (Auth::user()->pin != $pin) {
+      // if ($pin) {
+         return response()->json(['message' => 'Invalid credentials'], 401);
+      }
+      return response()->json([
+         'message' => 'Authentication Success!'
+      ], 201);
+   }
+
    public function register(Request $request)
    {
       // Validate the request data
@@ -34,7 +60,7 @@ class UserController extends Controller
          'name' => $request->name,
          'email' => $request->email,
          'password' => bcrypt($request->password),
-         'pin' => bcrypt($request->password),
+         'pin' => md5($request->pin),
       ]);
 
       $deviceController = app(DeviceController::class);
@@ -54,7 +80,7 @@ class UserController extends Controller
       // Validate the request data
       $validator = Validator::make($request->all(), [
          // 'email' => 'required|string|email|max:255',
-         'username' => 'required|string|max:20',
+         'username' => 'required|string|min:4|max:20',
          'password' => 'required|string|min:6',
       ]);
 
@@ -71,11 +97,17 @@ class UserController extends Controller
       $user = Auth::user();
       $userData = User::find($user->id);
 
+      // Get device
+      $deviceController = app(DeviceController::class);
+      // $device = $user->device;
+      $device = $deviceController->checkDevice($request->hwid);
+
       // Generate a new API token for the user
       $token = $user->createToken('API Token')->plainTextToken;
 
       return response()->json([
          'userData' => $userData,
+         'device' => $device,
          'token' => $token,
          'message' => 'Login Success!'
       ], 200);

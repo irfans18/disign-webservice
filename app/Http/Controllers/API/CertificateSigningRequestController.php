@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Models\Device;
 use App\Models\Certificate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -71,7 +72,7 @@ class CertificateSigningRequestController extends Controller
       $valid_start=time();
       $valid_end= strtotime('+1 years', $valid_start);
       // dd($valid_start . "\n" . $valid_end);
-      $this->saveCertificate($pubKey, $crtout, $certificate_chain, $serial, $valid_start, $valid_end);
+      $this->saveCertificate($pubKey, $crtout, $certificate_chain, $serial, $valid_start, $valid_end, hwid:$request->hwid);
       
       return response()->json([
          "user_certificate" => $crtout,
@@ -80,9 +81,12 @@ class CertificateSigningRequestController extends Controller
       // return ($crtout);
    }
 
-   private function saveCertificate($public_key, $certificate, $certificate_chain, $certificate_srl, $valid_start, $valid_end, $device_id = null ){
+   private function saveCertificate($public_key, $certificate, $certificate_chain, $certificate_srl, $valid_start, $valid_end, $hwid = null ){
+      $device = Device::where('hwid', $hwid)->first();
+
       $cert = new Certificate;
-      if($device_id != null) $cert->device_id = $device_id;
+      
+      if($hwid != null) $cert->device_id = $device->id;
       $cert->public_key = $public_key;
       $cert->certificate = $certificate;
       $cert->certificate_chain = $certificate_chain;

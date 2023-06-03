@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\CertificateRevokationController;
 use App\Http\Controllers\API\CertificateSigningRequestController;
+use App\Http\Controllers\API\DeviceController;
 use App\Http\Controllers\API\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -31,10 +32,17 @@ Route::get('test/', function () {
 Route::post('/register', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login']);
 Route::post('/csr', [CertificateSigningRequestController::class, 'signCsr']);
+Route::post('/revoke', [CertificateRevokationController::class, 'revoke']);
 // Route::get('csr', [CertificateSigningRequestController::class, 'loadPkey']);
 
 Route::middleware('auth:sanctum')->group(function () {
-   Route::post('/check-certificate-valid', [CertificateRevokationController::class, 'checkLicenceValidation']);
+   Route::get('/devices', [DeviceController::class, 'showUserDevices']);
+   Route::post('/device', [DeviceController::class, 'register']);
+   Route::post('/check-device', [DeviceController::class, 'checkDevice']);
+
+   Route::post('/isvalid', [CertificateRevokationController::class, 'checkLicenceValidation']);
+   Route::post('/revoke', [CertificateRevokationController::class, 'requestRevocation']);
    // Route::post('/csr', [CertificateSigningRequestController::class, 'signCsr']);
+   Route::post('/auth', [UserController::class, 'pinAuth']);
    Route::post('/logout', [UserController::class, 'logout']);
 });

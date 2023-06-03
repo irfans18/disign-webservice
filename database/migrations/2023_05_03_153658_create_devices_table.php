@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
             $table->string('hwid')->nullable();
             $table->string('device_name')->nullable();
+            $table->string('last_active')->nullable();
             $table->timestamps();
         });
     }
