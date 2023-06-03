@@ -35,13 +35,15 @@ Route::post('/csr', [CertificateSigningRequestController::class, 'signCsr']);
 // Route::post('/revoke', [CertificateRevokationController::class, 'revoke']);
 
 Route::middleware('auth:sanctum')->group(function () {
-   Route::get('/devices', [DeviceController::class, 'showUserDevices']);
+   // Route::get('/devices', [DeviceController::class, 'showUserDevices']);
    Route::post('/device', [DeviceController::class, 'register']);
    // Route::post('/check-device', [DeviceController::class, 'checkDevice']);
 
    Route::post('/isvalid', [CertificateRevokationController::class, 'checkLicenceValidation']);
    Route::post('/revoke', [CertificateRevokationController::class, 'requestRevocation']);
-   // Route::post('/csr', [CertificateSigningRequestController::class, 'signCsr']);
+   Route::post('/csr', [CertificateSigningRequestController::class, 'signCsr']);
+
+   Route::get('/user/devices', [UserController::class, 'getUserDevices']);
    Route::get('/user/{hwid}', [UserController::class, 'userInfo']);
    Route::post('/auth', [UserController::class, 'pinAuth']);
    Route::post('/logout', [UserController::class, 'logout']);

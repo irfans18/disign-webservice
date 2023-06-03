@@ -13,6 +13,39 @@ use App\Http\Controllers\API\DeviceController;
 class UserController extends Controller
 {
 
+   public function getUserDevices()
+   {
+      $user = Auth::user();
+      
+      // $cert = $user->load(['devices.activeCertificate']);
+      // return response()->json($cert);
+      
+      
+      // =========
+      
+      $devices = $user->devices()->with('activeCertificate')->get();
+      return response()->json(['devices' => $devices]);
+
+      // =========
+
+      // $devices = $user->devices()->with('activeCertificate')->get();
+
+      // // Format the data as needed for the API response
+      // $response = [
+      //    // 'user_id' => $user->id,
+      //    'devices' => $devices->map(function ($device) {
+      //       return [
+      //          'device_id' => $device->id,
+      //          'device_name' => $device->device_name,
+      //          'last_active' => $device->last_active,
+      //          'active_certificate' => $device->activeCertificate,
+      //       ];
+      //    }),
+      // ];
+
+      // return response()->json($response);
+   }
+
    public function userInfo($hwid)
    {
       $deviceController = app(DeviceController::class);

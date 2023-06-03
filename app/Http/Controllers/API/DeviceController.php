@@ -11,11 +11,21 @@ use Illuminate\Support\Facades\Auth;
 class DeviceController extends Controller
 {
 
-   public function showUserDevices()
+   public function correspondentCert()
    {
-      $devices = Auth::user()->device;
+      $devices = Device::with(['certificates' => function ($query) {
+         $query->where('is_revoked', false)
+            ->where('valid_end', '>=', now()); // Filter active certificates
+      }])->get();
+
       return response()->json($devices);
    }
+
+   // public function showUserDevices()
+   // {
+   //    $devices = Auth::user()->device;
+   //    return response()->json($devices);
+   // }
 
    public function index()
    {

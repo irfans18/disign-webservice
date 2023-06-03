@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Device extends Model
 {
-    use HasFactory;
+   use HasFactory;
 
-    /**
+   /**
     * The attributes that are mass assignable.
     *
     * @var array<int, string>
@@ -20,13 +20,19 @@ class Device extends Model
       'device_name',
    ];
 
+   public function user()
+   {
+      return $this->belongsTo(User::class);
+   }
+
    public function certificates()
    {
       return $this->hasMany(Certificate::class);
    }
 
-   public function user()
+   public function activeCertificate()
    {
-      return $this->belongsTo(User::class);
+      return $this->hasOne(Certificate::class)->where('is_revoked', false)
+                                              ->where('valid_end', '>=', time());
    }
 }
