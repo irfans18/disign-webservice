@@ -33,6 +33,7 @@ class UserController extends Controller
          return response()->json(['message' => 'Invalid credentials'], 401);
       }
       return response()->json([
+         'isValid' => true,
          'message' => 'Authentication Success!'
       ], 201);
    }
@@ -59,6 +60,7 @@ class UserController extends Controller
          'username' => $request->username,
          'name' => $request->name,
          'email' => $request->email,
+         'location_info' => $request->location_info,
          'password' => bcrypt($request->password),
          'pin' => md5($request->pin),
       ]);
@@ -107,7 +109,7 @@ class UserController extends Controller
       $token = $user->createToken('API Token')->plainTextToken;
 
       return response()->json([
-         'userData' => $userData,
+         // 'userData' => $userData,
          'device' => $device,
          'token' => $token,
          'message' => 'Login Success!'
