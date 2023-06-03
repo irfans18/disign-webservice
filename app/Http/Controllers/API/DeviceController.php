@@ -29,15 +29,19 @@ class DeviceController extends Controller
       if ($device == NULL) {
          // return response()->json(['message' => 'You need to register your device first!'], 401);
          return [
-            'message' => 'You need to register this device first!',
+            'status' => 'You need to register this device first!',
             'last_active' => null,
          ];
       }
       $device->last_active = time();
       return [
-         'message' => "Device already registered.",
+         'status' => "Device already registered.",
+         'id' => $device->id,
+         'device_name' => $device->device_name,
+         'hwid' => $device->hwid,
          'last_active' => date("d-m-Y h:i A", $device->last_active),
       ];
+      $device->update();
    }
 
    public function store($user_id, $hwid, $device_name)

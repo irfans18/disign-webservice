@@ -42,7 +42,7 @@ Route::middleware('auth:sanctum')->group(function () {
    Route::post('/isvalid', [CertificateRevokationController::class, 'checkLicenceValidation']);
    Route::post('/revoke', [CertificateRevokationController::class, 'requestRevocation']);
    // Route::post('/csr', [CertificateSigningRequestController::class, 'signCsr']);
-   Route::get('/user', [UserController::class, 'userInfo']);
+   Route::get('/user/{hwid}', [UserController::class, 'userInfo']);
    Route::post('/auth', [UserController::class, 'pinAuth']);
    Route::post('/logout', [UserController::class, 'logout']);
 });

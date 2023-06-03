@@ -4,18 +4,27 @@ namespace App\Http\Controllers\API;
 
 use Validator;
 use App\Models\User;
+use App\Models\Certificate;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\API\DeviceController;
 
 class UserController extends Controller
 {
 
-   public function userInfo()
+   public function userInfo($hwid)
    {
-      return response()->json(Auth::user());
+      $deviceController = app(DeviceController::class);
+      $device = $deviceController->checkDevice($hwid);
+      // dd($device);
+      $cert = Certificate::where('device_id', $device['id'])->first();
+
+      return response()->json([
+         'user' => Auth::user(),
+         'device' => $device,
+         'cert' => $cert,
+      ]);
    }
 
    public function pinAuth(Request $request)
