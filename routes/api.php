@@ -33,7 +33,6 @@ Route::post('/register', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login']);
 Route::post('/csr', [CertificateSigningRequestController::class, 'signCsr']);
 Route::post('/revoke', [CertificateRevokationController::class, 'revoke']);
-// Route::get('csr', [CertificateSigningRequestController::class, 'loadPkey']);
 
 Route::middleware('auth:sanctum')->group(function () {
    Route::get('/devices', [DeviceController::class, 'showUserDevices']);
