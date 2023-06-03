@@ -31,6 +31,7 @@ class CertificateRevokationController extends Controller
       $device = Device::where('hwid', $request->hwid)->first();
       if ($user_id != $device->user_id) {
          return response()->json([
+            'isRevoked' => false,
             'message' => 'Revokation Failed. Device not found!'
          ], 422);
       }
@@ -46,12 +47,14 @@ class CertificateRevokationController extends Controller
 
       if ($cert == NULL) {
          return response()->json([
+            'isRevoked' => false,
             'message' => 'Revokation Failed. Certificate not found!'
          ], 422);
       }
 
       if ($cert->is_revoked) {
          return response()->json([
+            'isRevoked' => false,
             'message' => 'Certificate already revoked'
          ], 422);
       }
@@ -63,6 +66,7 @@ class CertificateRevokationController extends Controller
       $cert->update();
 
       return response()->json([
+         'isRevoked' => true,
          'message' => 'Revokation Success!',
          'certificate' => $cert,
       ], 202);
