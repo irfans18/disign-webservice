@@ -6,6 +6,7 @@ use App\Models\Device;
 use App\Models\Certificate;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class CertificateSigningRequestController extends Controller
 {
@@ -80,11 +81,12 @@ class CertificateSigningRequestController extends Controller
    }
 
    private function saveCertificate($public_key, $certificate, $certificate_chain, $certificate_srl, $valid_start, $valid_end, $hwid = null ){
-      $device = Device::where('hwid', $hwid)->first();
-
+      $user_id = Auth::user()->id;
+      $device = Device::where('hwid', $hwid)->where('user_id', $user_id)->first();
+      // dd($device);
       $cert = new Certificate;
       
-      if($hwid != null) $cert->device_id = $device->id;
+      if($device != null) $cert->device_id = $device->id;
       $cert->public_key = $public_key;
       $cert->certificate = $certificate;
       $cert->certificate_chain = $certificate_chain;

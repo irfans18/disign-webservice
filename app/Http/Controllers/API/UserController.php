@@ -48,15 +48,14 @@ class UserController extends Controller
 
    public function userInfo($hwid)
    {
-      $deviceController = app(DeviceController::class);
-      $device = $deviceController->checkDevice($hwid);
-      // dd($device);
-      $cert = Certificate::where('device_id', $device['id'])->first();
+      $user = Auth::user();
 
+      $device = $user->devices()->with('activeCertificate')
+                  ->where('hwid', $hwid)->first();
       return response()->json([
-         'user' => Auth::user(),
+         // 'user' => Auth::user(),
+         'user' => $user,
          'device' => $device,
-         'cert' => $cert,
       ]);
    }
 
