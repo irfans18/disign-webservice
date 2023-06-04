@@ -33,6 +33,6 @@ class Device extends Model
    public function activeCertificate()
    {
       return $this->hasOne(Certificate::class)->where('is_revoked', false)
-                                              ->where('valid_end', '>=', time());
+                                              ->where('valid_end', '>=', time())->orderBy('valid_end', 'DESC');
    }
 }
