@@ -14,7 +14,3 @@ jobs:
         server: ${{ secrets.FTP_SERVER }}
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
-
-    - name: Run route cache
-      run: php artisan route:cache
-      working-directory: /home/hkdthlxm/api.irfams.my.id/ikp
