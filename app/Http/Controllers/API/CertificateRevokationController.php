@@ -29,6 +29,7 @@ class CertificateRevokationController extends Controller
 
       // $device = Device::select('*')->where('hwid', $request->hwid)->first()->toArray();
       $device = Device::where('hwid', $request->hwid)->first();
+      dd($device);
       if ($user_id != $device->user_id) {
          return response()->json([
             'isRevoked' => false,
