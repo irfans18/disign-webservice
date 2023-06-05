@@ -25,16 +25,16 @@ class CertificateRevokationController extends Controller
       if ($validator->fails()) {
          return response()->json(['message' => $validator->errors()], 422);
       }
-      $user_id = Auth::user()->id;
+      $user = Auth::user();
 
-      // $device = Device::select('*')->where('hwid', $request->hwid)->first()->toArray();
-      $device = Device::where('hwid', $request->hwid)->first();
-      dd($user_id, $device);
-      if ($user_id != $device->user_id) {
+      $device = $user->devices->where('hwid', $request->hwid)->first();
+      // $device = Device::where('hwid', $request->hwid)->where()->first();
+      // dd($device);
+      if ($device == null) {
          return response()->json([
             'isRevoked' => false,
             'message' => 'Revokation Failed. Device not found!',
-            'certificate' => $cert,
+            'certificate' => null,
          ], 422);
       }
       // $cert = Certificate::where('device_id', $device->id)->first();
@@ -51,7 +51,7 @@ class CertificateRevokationController extends Controller
          return response()->json([
             'isRevoked' => false,
             'message' => 'Revokation Failed. Certificate not found!',
-            'certificate' => $cert,
+            'certificate' => null,
          ], 422);
       }
 

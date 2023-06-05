@@ -15,7 +15,7 @@ class CertificateSigningRequestController extends Controller
       $pem = ($this->loadPem()->getData());
       $ca_pkey_pem = $pem->pkey;
       $ca_cert_pem = $pem->cert;
-      // dd($pem);
+      // dd($request->hwid);
 
       $ca_pkey = openssl_get_privatekey($ca_pkey_pem, '1234');
       $ca_cert = openssl_x509_read($ca_cert_pem);
@@ -71,7 +71,7 @@ class CertificateSigningRequestController extends Controller
       $valid_start=time();
       $valid_end= strtotime('+1 years', $valid_start);
       // dd($valid_start . "\n" . $valid_end);
-      $this->saveCertificate($pubKey, $crtout, $certificate_chain, $serial, $valid_start, $valid_end, hwid:$request->hwid);
+      $this->saveCertificate($pubKey, $crtout, $certificate_chain, $serial, $valid_start, $valid_end, $request->hwid);
       
       return response()->json([
          "user_certificate" => $crtout,
@@ -80,10 +80,10 @@ class CertificateSigningRequestController extends Controller
       // return ($crtout);
    }
 
-   private function saveCertificate($public_key, $certificate, $certificate_chain, $certificate_srl, $valid_start, $valid_end, $hwid = null ){
-      $user_id = Auth::user()->id;
-      $device = Device::where('hwid', $hwid)->where('user_id', $user_id)->first();
-      // dd($device);
+   private function saveCertificate($public_key, $certificate, $certificate_chain, $certificate_srl, $valid_start, $valid_end, $hwid ){
+      $user = Auth::user();
+      $device = $user->devices->where('hwid', $hwid)->first();
+
       $cert = new Certificate;
       
       if($device != null) $cert->device_id = $device->id;
