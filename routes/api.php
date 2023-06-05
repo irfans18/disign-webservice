@@ -1,11 +1,12 @@
 <?php
 
-use App\Http\Controllers\API\CertificateRevokationController;
-use App\Http\Controllers\API\CertificateSigningRequestController;
-use App\Http\Controllers\API\DeviceController;
-use App\Http\Controllers\API\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
+use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\API\DeviceController;
+use App\Http\Controllers\API\CertificateRevokationController;
+use App\Http\Controllers\API\CertificateSigningRequestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +34,12 @@ Route::post('/register', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login']);
 // Route::post('/csr', [CertificateSigningRequestController::class, 'signCsr']);
 // Route::post('/revoke', [CertificateRevokationController::class, 'revoke']);
+Route::get('/mfs', function () {
+   Artisan::call('migrate:fresh', ['--seed' => true]);
+
+   return response()->json(['message' => 'Migration and seeding completed.']);
+
+});
 
 Route::middleware('auth:sanctum')->group(function () {
    // Route::get('/devices', [DeviceController::class, 'showUserDevices']);

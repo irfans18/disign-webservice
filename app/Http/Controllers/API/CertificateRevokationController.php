@@ -16,7 +16,7 @@ class CertificateRevokationController extends Controller
    {
       // Validate the request data
       $validator = Validator::make($request->all(), [
-         // 'email' => 'required|string|email|max:255',
+         'serial' => 'required|string',
          'hwid' => 'required|string',
          'revokation_detail' => 'required|string|min:6',
          // 'revoked_timestamp' => 'required|string|min:6',
@@ -35,9 +35,9 @@ class CertificateRevokationController extends Controller
             'message' => 'Revokation Failed. Device not found!'
          ], 422);
       }
-      $cert = Certificate::where('device_id', $device->id)->first();
+      // $cert = Certificate::where('device_id', $device->id)->first();
 
-      return $this->revoke($cert->certificate_srl, $request->revokation_detail);
+      return $this->revoke($request->serial, $request->revokation_detail);
    }
 
    public function revoke($serial, $detail)
@@ -48,14 +48,17 @@ class CertificateRevokationController extends Controller
       if ($cert == NULL) {
          return response()->json([
             'isRevoked' => false,
-            'message' => 'Revokation Failed. Certificate not found!'
+            'message' => 'Revokation Failed. Certificate not found!',
+            'certificate' => $cert,
          ], 422);
       }
 
       if ($cert->is_revoked) {
          return response()->json([
             'isRevoked' => false,
-            'message' => 'Certificate already revoked'
+            'message' => 'Certificate already revoked',
+            'certificate' => $cert,
+
          ], 422);
       }
 
