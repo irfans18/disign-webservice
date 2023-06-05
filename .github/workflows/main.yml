@@ -17,3 +17,4 @@ jobs:
 
     - name: Run route cache
       run: php artisan route:cache
+      working-directory: /home/hkdthlxm/api.irfams.my.id/ikp
