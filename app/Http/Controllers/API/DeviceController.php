@@ -38,18 +38,15 @@ class DeviceController extends Controller
       $device = Device::where('hwid', $hwid)->first();
       if ($device == NULL) {
          // return response()->json(['message' => 'You need to register your device first!'], 401);
-         return [
-            'status' => 'You need to register this device first!',
-            'last_active' => null,
-         ];
+         return null;
       }
-      $device->last_active = time();
+      $device->last_active = date("d-m-Y h:i A", time());
       return [
          'status' => "Device already registered.",
          'id' => $device->id,
          'device_name' => $device->device_name,
          'hwid' => $device->hwid,
-         'last_active' => date("d-m-Y h:i A", $device->last_active),
+         'last_active' => $device->last_active,
       ];
       $device->update();
    }
@@ -61,6 +58,8 @@ class DeviceController extends Controller
          'user_id' => $user_id,
          'hwid' => $hwid,
          'device_name' => $device_name,
+         'last_active' => date("d-m-Y h:i A", time()),
+
       ]);
       return $device;
    }
@@ -82,13 +81,17 @@ class DeviceController extends Controller
       if ($validator->fails()) {
          return response()->json(['message' => $validator->errors()], 422);
       }
-
-      $device = Device::create([
-         'user_id' => Auth::user()->id,
-         'hwid' => $request->hwid,
-         'device_name' => $request->device_name,
-      ]);
-      return response()->json(['device' => $device, 'message' => 'Device successfully registered'], 201);
+      $device = Auth::user()->devices()->where('hwid', $request->hwid)->first();
+      if ($device == null) {
+         $device = Device::create([
+            'user_id' => Auth::user()->id,
+            'hwid' => $request->hwid,
+            'device_name' => $request->device_name,
+            'last_active' => date("d-m-Y h:i A", time()),
+         ]);
+         return response()->json(['device' => $device, 'message' => 'Device successfully registered'], 201);
+      }
+      return response()->json(['device' => $device, 'message' => 'Device already registered'], 422);
    }
 
    /**

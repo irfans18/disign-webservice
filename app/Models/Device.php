@@ -18,6 +18,7 @@ class Device extends Model
       'user_id',
       'hwid',
       'device_name',
+      'last_active',
    ];
 
    public function user()
@@ -33,6 +34,12 @@ class Device extends Model
    public function activeCertificate()
    {
       return $this->hasOne(Certificate::class)->where('is_revoked', false)
+                                              ->where('valid_end', '>=', time())->orderBy('valid_end', 'DESC');
+   }
+
+   public function lastCertificate()
+   {
+      return $this->hasOne(Certificate::class)
                                               ->where('valid_end', '>=', time())->orderBy('valid_end', 'DESC');
    }
 }

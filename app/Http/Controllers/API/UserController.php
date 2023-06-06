@@ -23,7 +23,8 @@ class UserController extends Controller
       
       // =========
       
-      $devices = $user->devices()->with('activeCertificate')->get();
+      // $devices = $user->devices()->with('activeCertificate')->get();
+      $devices = $user->devices()->with('lastCertificate')->get();
       return response()->json(['devices' => $devices]);
 
       // =========
@@ -144,7 +145,7 @@ class UserController extends Controller
 
       // Get the authenticated user
       $user = Auth::user();
-      $userData = User::find($user->id);
+      // $userData = User::find($user->id);
 
       // Get device
       $deviceController = app(DeviceController::class);
