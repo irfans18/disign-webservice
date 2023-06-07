@@ -74,7 +74,7 @@ class CertificateRevokationController extends Controller
          'isRevoked' => true,
          'message' => 'Revokation Success!',
          'certificate' => $cert,
-      ], 202);
+      ], 200);
    }
 
    public function checkLicenceValidation(Request $request)

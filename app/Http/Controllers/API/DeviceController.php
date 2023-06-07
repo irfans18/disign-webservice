@@ -41,6 +41,7 @@ class DeviceController extends Controller
          return null;
       }
       $device->last_active = date("d-m-Y h:i A", time());
+      $device->update();
       return [
          'status' => "Device already registered.",
          'id' => $device->id,
@@ -48,7 +49,6 @@ class DeviceController extends Controller
          'hwid' => $device->hwid,
          'last_active' => $device->last_active,
       ];
-      $device->update();
    }
 
    public function store($user_id, $hwid, $device_name)
