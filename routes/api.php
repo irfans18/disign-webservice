@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
+use App\Http\Controllers\StorageController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\DeviceController;
 use App\Http\Controllers\API\CertificateRevokationController;
@@ -30,21 +31,17 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('test/', function () {
     return response()->json(['message' => 'Hello brader']);
 });
-Route::post('/register', [UserController::class, 'register']);
-Route::post('/login', [UserController::class, 'login']);
-// Route::post('/csr', [CertificateSigningRequestController::class, 'signCsr']);
-// Route::post('/revoke', [CertificateRevokationController::class, 'revoke']);
 Route::get('/mfs', function () {
    Artisan::call('migrate:fresh', ['--seed' => true]);
 
    return response()->json(['message' => 'Migration and seeding completed.']);
-
 });
+Route::post('/upload', [StorageController::class, 'upload']);
+Route::post('/register', [UserController::class, 'register']);
+Route::post('/login', [UserController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
-   // Route::get('/devices', [DeviceController::class, 'showUserDevices']);
    Route::post('/device', [DeviceController::class, 'register']);
-   // Route::post('/check-device', [DeviceController::class, 'checkDevice']);
 
    Route::post('/isvalid', [CertificateRevokationController::class, 'checkLicenceValidation']);
    Route::post('/revoke', [CertificateRevokationController::class, 'requestRevocation']);
