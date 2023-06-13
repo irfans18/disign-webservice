@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Device;
 use App\Models\Certificate;
 use Illuminate\Http\Request;
+use App\Models\Request as ModelsRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,7 +19,7 @@ class CertificateRevokationController extends Controller
       $validator = Validator::make($request->all(), [
          'serial' => 'required|string',
          'hwid' => 'required|string',
-         'revokation_detail' => 'required|string|min:6',
+         'revocation_detail' => 'required|string',
          // 'revoked_timestamp' => 'required|string|min:6',
       ]);
 
@@ -32,14 +33,64 @@ class CertificateRevokationController extends Controller
       // dd($device);
       if ($device == null) {
          return response()->json([
-            'isRevoked' => false,
-            'message' => 'Revokation Failed. Device not found!',
-            'certificate' => null,
+            'revocation_status' => 'unknown',
+            'message' => 'Revokation request failed. Device not found!',
          ], 422);
       }
-      // $cert = Certificate::where('device_id', $device->id)->first();
 
-      return $this->revoke($request->serial, $request->revokation_detail);
+      return $this->createRequest($request->serial, $request->revocation_detail, $request->file);
+   }
+   public function createRequest($serial, $detail, $file)
+   {
+      $cert = $this->loadCRL($serial);
+
+      if ($cert == NULL) {
+         return response()->json([
+            'revocation_status' => 'unknown',
+            'message' => 'Revokation request failed. Certificate not found!',
+         ], 422);
+      }
+
+      if ($cert->is_revoked) {
+         return response()->json([
+            'revocation_status' => ModelsRequest::APRROVE,
+            'message' => 'Certificate already revoked',
+
+         ], 422);
+      }
+
+      $filepath = $this->upload($file);
+
+      $req = ModelsRequest::create([
+         'certificate_id' => $cert->id,
+         'status' => ModelsRequest::PENDING,
+         'filepath' => $filepath,
+         'revocation_detail' => $detail,
+         'revoked_at' => time(),
+         'revoked_timestamp' => time(),
+      ]);
+
+      // $cert->is_revoked = true;
+      // $cert->revoked_at = time();
+      // $cert->revoked_timestamp = time();
+      // $cert->revokation_detail = $detail;
+      // $cert->update();
+
+      return response()->json([
+         'revocation_status' => ModelsRequest::PENDING,
+         'message' => 'Revocation request created!',
+      ], 201);
+   }
+   
+   public function upload($file)
+   {
+      if ($file) {
+         // $file = $request->file('file');
+         $path = $file->store('pdfs', 'public');
+         $filename = basename($path);
+         return $filename;
+      }
+      return 'File not uploaded!';
    }
 
    public function revoke($serial, $detail)
@@ -100,28 +151,11 @@ class CertificateRevokationController extends Controller
 
    private function loadCRL($cert_srl)
    {
-      // $user_id = Auth::user()->id;
-      // $certificates = User::find($user_id)->certificates;
-      // dd($certificates);
-
-      // if (is_array($certificates)) {
-      //    foreach ($certificates as $cert) {
-      //       if ($cert['certificate_srl'] == $cert_srl) {
-      //          $device_cert = $cert;
-      //       }
-      //    }
-      // } else {
-      //    $device_cert = $certificates;
-      // }
       $cert = Certificate::where('certificate_srl', $cert_srl)->first();
-
       return $cert;
    }
    private function loadPem()
    {
-      // echo(storage_path("app/public/subca1.crt"));
-      // echo(storage_path("app/public/subca1.key"));
-      // $pkey = File::get(storage_path("app/public/subca1.key"));
       $pkey = <<<EOD
 -----BEGIN ENCRYPTED PRIVATE KEY-----
 MIIFHzBJBgkqhkiG9w0BBQ0wPDAbBgkqhkiG9w0BBQwwDgQIGwMgpxO/moYCAggA

@@ -122,7 +122,7 @@ EOD,
 
          // 'is_revoked' => 0000000001,
          // 'revoked_at' => 0000000001,
-         'revokation_detail' => 0000000001,
+         // 'revokacion_detail' => 0000000001,
          'valid_start' => "May  7 13:11:04 2023 GMT",
          'valid_end' => "May  6 13:11:04 2024 GMT",
       ]);

@@ -22,7 +22,7 @@ class Certificate extends Model
       'is_revoked',
       'revoked_at',
       'revoked_timestamp',
-      'revokation_detail',
+      'revocation_detail',
       'valid_start',
       'valid_end',
    ];

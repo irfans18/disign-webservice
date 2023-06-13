@@ -14,6 +14,7 @@ class StorageController extends Controller
    {
 
       if ($request->hasFile('file')) {
+         
          $file = $request->file('file');
          $path = $file->store('pdfs', 'public');
          $filename = basename($path);
@@ -21,26 +22,6 @@ class StorageController extends Controller
       }
       return response()->json(['error' => 'File not found.'], 400);
 
-      // $file = $request->file('file');
-
-      // if ($file) {
-      //    $path = $file->store('pdfs', 'gcs'); // Upload the file to Firebase Storage
-
-      //    return response()->json([
-      //       'message' => 'PDF uploaded successfully',
-      //       'path' => $path,
-      //    ]);
-      // }
-      // return response()->json([
-      //    'message' => 'PDF uploaded Failed!',
-      //    // 'path' => $path,
-      // ]);
-
-      // $path = $request->file('file')->store('uploads', 'firebase');
-
-      // // Save the file path to the 'requests' table using the provided schema
-
-      // return response()->json(['path' => $path]);
    }
 
    public function show($filename)
@@ -55,7 +36,7 @@ class StorageController extends Controller
 
    public function download($filePath)
    {
-      return Storage::disk('firebase')->download($filePath);
+      return Storage::disk('public')->download($filePath);
    }
 
    public function delete($filePath)

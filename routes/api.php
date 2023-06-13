@@ -36,8 +36,8 @@ Route::get('/mfs', function () {
 
    return response()->json(['message' => 'Migration and seeding completed.']);
 });
-Route::post('/upload', [StorageController::class, 'upload']);
-Route::get('/show/{filename}', [StorageController::class, 'show']);
+// Route::post('/upload', [StorageController::class, 'upload']);
+// Route::get('/show/{filename}', [StorageController::class, 'show']);
 Route::post('/register', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login']);
 
@@ -45,6 +45,7 @@ Route::middleware('auth:sanctum')->group(function () {
    Route::post('/device', [DeviceController::class, 'register']);
 
    Route::post('/isvalid', [CertificateRevokationController::class, 'checkLicenceValidation']);
+   Route::post('/revoke', [CertificateRevokationController::class, 'requestRevocation']);
    Route::post('/revoke', [CertificateRevokationController::class, 'requestRevocation']);
    Route::post('/csr', [CertificateSigningRequestController::class, 'signCsr']);
 
