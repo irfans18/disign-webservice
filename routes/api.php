@@ -45,7 +45,7 @@ Route::middleware('auth:sanctum')->group(function () {
    Route::post('/device', [DeviceController::class, 'register']);
 
    Route::post('/isvalid', [CertificateRevokationController::class, 'checkLicenceValidation']);
-   Route::post('/revoke', [CertificateRevokationController::class, 'requestRevocation']);
+   Route::get('/requests', [CertificateRevokationController::class, 'getAllRequests']);
    Route::post('/revoke', [CertificateRevokationController::class, 'requestRevocation']);
    Route::post('/csr', [CertificateSigningRequestController::class, 'signCsr']);
 
