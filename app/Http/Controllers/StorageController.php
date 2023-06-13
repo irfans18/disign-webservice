@@ -13,10 +13,13 @@ class StorageController extends Controller
    public function upload(Request $request)
    {
 
-      $file = $request->file('file');
-      $path = $file->store('pdfs', 'public');
-
-      return response()->json(['path' => $path]);
+      if ($request->hasFile('file')) {
+         $file = $request->file('file');
+         $path = $file->store('pdfs', 'public');
+         $filename = basename($path);
+         return response()->json(['path' => $path, 'name' => $filename], 201);
+      }
+      return response()->json(['error' => 'File not found.'], 400);
 
       // $file = $request->file('file');
 
@@ -40,11 +43,14 @@ class StorageController extends Controller
       // return response()->json(['path' => $path]);
    }
 
-   public function getPdf($path)
+   public function show($filename)
    {
-      $url = FirebaseStorage::storage()->url($path);
-
-      return response()->json(['url' => $url]);
+      // $path = 'pdfs/' . $filename;
+      $path = 'pdfs/' . $filename;
+      if (Storage::disk('public')->exists($path)) {
+         return Storage::disk('public')->response($path);
+      }
+      return response()->json(['error' => 'File not found.'], 404);
    }
 
    public function download($filePath)
