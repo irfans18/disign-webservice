@@ -25,7 +25,7 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'admin'])->name('dashboard');
 
 Route::middleware(['auth', 'admin'])->group(function () {
-   Route::get('/show/{filename}', [StorageController::class, 'show']);
+   Route::get('/show/{filename}', [StorageController::class, 'show'])->name('show');
    Route::get('/requests/{id}', [RequestDetail::class, 'render']);
    Route::get('/requests/{id}/acc', [RequestDetail::class, 'onAccept']);
    Route::get('/requests/{id}/dec', [RequestDetail::class, 'onDecline']);

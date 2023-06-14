@@ -44,10 +44,10 @@ class RequestDetail extends Component
       $req->update();
 
       $cert = Certificate::find($req->certificate_id);
+      $cert->is_revoked = true;
       $cert->revocation_detail = $req->revocation_detail;
       $cert->revoked_at = $req->revoked_at;
       $cert->revoked_timestamp = $req->revoked_timestamp;
-      $cert->is_revoked = true;
       $cert->update();
       return redirect()->route('dashboard');
    }
@@ -57,6 +57,11 @@ class RequestDetail extends Component
       $req = $this->req;
       $req->status = ModelsRequest::REJECTED;
       $req->update();
+      
+      $cert = Certificate::find($req->certificate_id);
+      $cert->is_revoked = false;
+      $cert->update();
+
       return redirect()->route('dashboard');
    }
 }
