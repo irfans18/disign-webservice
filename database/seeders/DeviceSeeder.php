@@ -21,8 +21,8 @@ class DeviceSeeder extends Seeder
          'device_name' => 'Server Disign',
       ]);
       Device::create([
-         'user_id' => 2,
-         'hwid' => '0x1',
+         'user_id' => 3,
+         'hwid' => '86E54A62-DA10-4989-B630-38B83E654FC9',
          'device_name' => 'Testing Device',
       ]);
    }

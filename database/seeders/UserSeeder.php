@@ -25,6 +25,16 @@ class UserSeeder extends Seeder
       ]);
 
       User::create([
+         'username' => 'server',
+         'name' => 'Irfan Shiddiq',
+         'location_info' => 'Surabaya',
+         'email' => 'server@this',
+         'password' => bcrypt('irfan123'),
+         'pin' => md5('999999'),
+         'role' => 30,
+      ]);
+
+      User::create([
          'username' => 'irfan',
          'name' => 'Irfan Shiddiq',
          'location_info' => 'Surabaya',

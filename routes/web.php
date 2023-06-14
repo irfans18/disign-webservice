@@ -22,9 +22,10 @@ Route::get('/', function () {
 
 Route::get('/dashboard', function () {
    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth', 'admin'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'admin'])->group(function () {
+   Route::get('/show/{filename}', [StorageController::class, 'show']);
    Route::get('/requests/{id}', [RequestDetail::class, 'render']);
    Route::get('/requests/{id}/acc', [RequestDetail::class, 'onAccept']);
    Route::get('/requests/{id}/dec', [RequestDetail::class, 'onDecline']);
