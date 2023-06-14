@@ -121,9 +121,9 @@
                                        wire:click="onAccept" href="/requests/{{ $detail->id }}/acc">APPROVE</a>
                                  </div>
                                  {{-- <a class="m-2 px-4 py-1 bg-red-400 text-lg rounded-md text-white"
-                                 href="/dashboard/kelompok">REJECT</a>
-                              <a class="m-2 px-2 py-1 bg-blue-400 text-lg rounded-md text-white"
-                                 href="/dashboard/kelompok">APPROVE</a> --}}
+                                 href="/dashboard/kelompok">REJECT</a> --}}
+                                 {{-- <a class="m-2 px-2 py-1 bg-blue-400 text-lg rounded-md text-white"
+                                    href="/dashboard/kelompok">APPROVE</a> --}}
                               </div>
                            </div>
                         </div>
