@@ -82,25 +82,29 @@
                                                 Supported Document
                                              </td>
                                              <td class="px-6 py-4 text-sm text-black whitespace-nowrap">
-                                                <a class="underline"
-                                                   href="{{ route('show', ['filename' => $detail->filepath]) }}"
-                                                   target="_blank">{{ $detail->filepath }}</a>
+                                                @if ($detail->filepath != null)
+                                                   <a class="underline"
+                                                      href="{{ route('show', ['filename' => $detail->filepath]) }}"
+                                                      target="_blank">{{ $detail->filepath }}</a>
+                                                @else
+                                                   No file attached
+                                                @endif
                                              </td>
                                           </tr>
-                                          <tr class="transition-all hover:bg-gray-100 hover:shadow-lg">
-                                             {{-- Supported Document --}}
+                                          @if ($detail->filepath != null)
+                                             <tr class="transition-all hover:bg-gray-100 hover:shadow-lg">
+                                                <td colspan="2" class="px-6 py-4 text-center text-sm text-gray-500">
+                                                   Preview Supported Document
+                                                </td>
+                                             </tr>
+                                             <tr class="transition-all hover:bg-gray-100 hover:shadow-lg">
 
-                                             <td colspan="2" class="px-6 py-4 text-center text-sm text-gray-500">
-                                                Preview Supported Document
-                                             </td>
-                                          </tr>
-                                          <tr class="transition-all hover:bg-gray-100 hover:shadow-lg">
-
-                                             <td colspan="2"
-                                                class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
-                                                <iframe src="{{ $pdf }}" class="w-full h-screen"></iframe>
-                                             </td>
-                                          </tr>
+                                                <td colspan="2"
+                                                   class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
+                                                   <iframe src="{{ $pdf }}" class="w-full h-screen"></iframe>
+                                                </td>
+                                             </tr>
+                                          @endif
                                        </tbody>
                                     @endisset
                                  </table>

@@ -101,7 +101,7 @@ class CertificateRevokationController extends Controller
          $filename = basename($path);
          return $filename;
       }
-      return 'File not uploaded!';
+      return null;
    }
 
    public function revoke($serial, $detail)
