@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Request;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Certificate extends Model
 {
@@ -30,5 +31,10 @@ class Certificate extends Model
    public function device()
    {
       return $this->belongsTo(Device::class);
+   }
+
+   public function requests()
+   {
+      return $this->hasMany(Request::class);
    }
 }

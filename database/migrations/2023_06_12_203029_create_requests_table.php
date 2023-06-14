@@ -15,6 +15,7 @@ return new class extends Migration
    {
       Schema::create('requests', function (Blueprint $table) {
          $table->id();
+         $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
          $table->foreignId('certificate_id')->nullable()->constrained()->nullOnDelete();
          $table->integer('status')->default(0);
          $table->string('filepath')->nullable();

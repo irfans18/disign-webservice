@@ -55,7 +55,7 @@ class CertificateRevokationController extends Controller
 
       if ($cert->is_revoked) {
          return response()->json([
-            'revocation_status' => ModelsRequest::APRROVE,
+            'revocation_status' => ModelsRequest::APPROVED,
             'message' => 'Certificate already revoked',
             'file_upload' => null,
 
@@ -65,6 +65,7 @@ class CertificateRevokationController extends Controller
       $filepath = $this->upload($file);
 
       $req = ModelsRequest::create([
+         'user_id' => Auth::user()->id,
          'certificate_id' => $cert->id,
          'status' => ModelsRequest::PENDING,
          'filepath' => $filepath,

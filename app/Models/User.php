@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Device;
+use App\Models\Request;
 use App\Models\Certificate;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
@@ -58,6 +59,11 @@ class User extends Authenticatable
    public function certificates()
    {
       return $this->hasManyThrough(Certificate::class, Device::class);
+   }
+
+   public function requests()
+   {
+      return $this->hasMany(Request::class);
    }
 
    public function getRoleNameAttribute()
